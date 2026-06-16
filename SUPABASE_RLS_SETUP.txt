@@ -1,0 +1,67 @@
+===============================================
+SUPABASE RLS SETUP - COPY AND PASTE COMMANDS
+===============================================
+
+Step 1: Go to https://app.supabase.com
+Step 2: Select your project
+Step 3: Click "SQL Editor" in left sidebar
+Step 4: Click "New Query"
+Step 5: Copy everything below and paste it into the editor
+Step 6: Click "Run" button
+
+===============================================
+COPY FROM HERE:
+===============================================
+
+-- Create the content-files storage bucket
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('content-files', 'content-files', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+-- Allow public to read files
+CREATE POLICY IF NOT EXISTS "Allow public read on content-files"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'content-files');
+
+-- Allow authenticated users to upload
+CREATE POLICY IF NOT EXISTS "Allow authenticated upload on content-files"
+ON storage.objects FOR INSERT
+WITH CHECK (
+  bucket_id = 'content-files'
+  AND auth.role() = 'authenticated'
+);
+
+-- Allow authenticated users to update
+CREATE POLICY IF NOT EXISTS "Allow authenticated update on content-files"
+ON storage.objects FOR UPDATE
+USING (
+  bucket_id = 'content-files'
+  AND auth.role() = 'authenticated'
+)
+WITH CHECK (
+  bucket_id = 'content-files'
+  AND auth.role() = 'authenticated'
+);
+
+-- Allow authenticated users to delete
+CREATE POLICY IF NOT EXISTS "Allow authenticated delete on content-files"
+ON storage.objects FOR DELETE
+USING (
+  bucket_id = 'content-files'
+  AND auth.role() = 'authenticated'
+);
+
+-- Enable RLS
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+===============================================
+COPY UP TO HERE
+===============================================
+
+After running:
+✅ You should see "Success. No rows returned"
+✅ Go to Storage > content-files to verify bucket exists
+✅ Try uploading a file in your app
+✅ Files should appear in Supabase Storage
+
+Questions? Check browser console (F12) for upload errors.

@@ -1,0 +1,153 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Pastel cute design system — soft lavender / peach / mint / butter */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 20px);
+
+  --font-display: "Fraunces", "Quicksand", ui-serif, Georgia, serif;
+  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-lavender: var(--lavender);
+  --color-lavender-ink: var(--lavender-ink);
+  --color-peach: var(--peach);
+  --color-peach-ink: var(--peach-ink);
+  --color-mint: var(--mint);
+  --color-mint-ink: var(--mint-ink);
+  --color-butter: var(--butter);
+  --color-butter-ink: var(--butter-ink);
+  --color-rose: var(--rose);
+  --color-rose-ink: var(--rose-ink);
+  --color-sky: var(--sky);
+  --color-sky-ink: var(--sky-ink);
+
+  --shadow-sticker: 0 2px 0 0 var(--sticker-shadow), 0 8px 20px -8px var(--sticker-shadow);
+  --shadow-soft: 0 6px 24px -10px oklch(0.6 0.08 320 / 0.25);
+}
+
+:root {
+  --radius: 1rem;
+
+  --background: oklch(0.985 0.012 80);            /* warm cream */
+  --foreground: oklch(0.28 0.04 300);              /* deep plum */
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.28 0.04 300);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.28 0.04 300);
+
+  --primary: oklch(0.72 0.13 320);                 /* dusty pink-lavender */
+  --primary-foreground: oklch(0.99 0.005 320);
+  --secondary: oklch(0.94 0.04 90);                /* butter */
+  --secondary-foreground: oklch(0.32 0.04 300);
+  --muted: oklch(0.95 0.02 320);
+  --muted-foreground: oklch(0.5 0.04 300);
+  --accent: oklch(0.9 0.07 200);                   /* soft sky */
+  --accent-foreground: oklch(0.28 0.05 250);
+  --destructive: oklch(0.7 0.16 25);
+  --destructive-foreground: oklch(0.99 0.005 0);
+
+  --border: oklch(0.91 0.02 320);
+  --input: oklch(0.93 0.02 320);
+  --ring: oklch(0.78 0.12 320);
+
+  /* Pastel sticker palette */
+  --lavender: oklch(0.91 0.05 305);
+  --lavender-ink: oklch(0.38 0.1 305);
+  --peach: oklch(0.92 0.06 50);
+  --peach-ink: oklch(0.42 0.13 40);
+  --mint: oklch(0.92 0.06 165);
+  --mint-ink: oklch(0.4 0.1 165);
+  --butter: oklch(0.95 0.07 95);
+  --butter-ink: oklch(0.45 0.12 80);
+  --rose: oklch(0.9 0.07 15);
+  --rose-ink: oklch(0.45 0.15 15);
+  --sky: oklch(0.91 0.05 230);
+  --sky-ink: oklch(0.4 0.12 250);
+
+  --sticker-shadow: oklch(0.7 0.08 320 / 0.2);
+
+  --sidebar: oklch(0.98 0.015 320);
+  --sidebar-foreground: oklch(0.3 0.04 300);
+  --sidebar-primary: oklch(0.72 0.13 320);
+  --sidebar-primary-foreground: oklch(0.99 0.005 320);
+  --sidebar-accent: oklch(0.94 0.03 320);
+  --sidebar-accent-foreground: oklch(0.3 0.04 300);
+  --sidebar-border: oklch(0.91 0.02 320);
+  --sidebar-ring: oklch(0.78 0.12 320);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(circle at 12% 18%, oklch(0.95 0.06 320 / 0.6), transparent 35%),
+      radial-gradient(circle at 88% 12%, oklch(0.95 0.06 50 / 0.5), transparent 38%),
+      radial-gradient(circle at 75% 92%, oklch(0.94 0.06 165 / 0.55), transparent 40%),
+      radial-gradient(circle at 8% 88%, oklch(0.95 0.07 95 / 0.5), transparent 38%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.01em; }
+}
+
+/* Sticker — cute tilted tag */
+@utility sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  box-shadow: var(--shadow-sticker);
+  border: 1px solid oklch(1 0 0 / 0.6);
+}
+
+@utility paper-card {
+  background: var(--color-card);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
+}
+
+@utility cute-tilt-left { transform: rotate(-1.2deg); }
+@utility cute-tilt-right { transform: rotate(1.2deg); }
+
+@utility scallop-top {
+  background-image: radial-gradient(circle at 8px 0, var(--color-background) 6px, transparent 6.5px);
+  background-size: 16px 8px;
+  background-repeat: repeat-x;
+}
