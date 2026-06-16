@@ -1,0 +1,12 @@
+node_modules
+.output
+dist
+dist-ssr
+.git
+*.bak
+*.log
+.DS_Store
+.vinxi
+.nitro
+.wrangler
+# NOTE: .env is intentionally NOT ignored — Vite needs VITE_* vars at build time.
