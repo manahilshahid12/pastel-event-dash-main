@@ -11,7 +11,6 @@ import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
 
 export const Route = createFileRoute("/_authenticated/guests")({
-  ssr: false,
   component: GuestsPage,
 });
 

@@ -15,7 +15,6 @@ import { format, startOfWeek, endOfWeek, addDays, addWeeks, isSameDay } from "da
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/content")({
-  ssr: false,
   component: ContentPage,
 });
 

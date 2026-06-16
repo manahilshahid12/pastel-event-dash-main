@@ -1,12 +1,21 @@
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
+// Plain client-side Vite SPA.
+// - TanStack Router file-based routing (client only, no SSR).
+// - Builds static assets to `dist/`, which Vercel serves directly.
+// - Backend logic lives in Vercel serverless functions under `/api`.
 export default defineConfig({
-  // Build a self-contained Node server (works on Railway, Render, etc.)
-  // instead of the default Cloudflare Workers output.
-  nitro: { preset: "node-server" },
-  tanstackStart: {
-    // Pages render on the client; the Node server still serves the
-    // HTML shell and the /api/* server routes.
-    ssr: false,
+  plugins: [
+    tanstackRouter({ target: "react", autoCodeSplitting: true }),
+    react(),
+    tailwindcss(),
+    tsconfigPaths(),
+  ],
+  build: {
+    outDir: "dist",
   },
 });

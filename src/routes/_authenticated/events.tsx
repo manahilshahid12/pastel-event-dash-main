@@ -12,10 +12,8 @@ import { PASTELS, pastel } from "@/lib/pastel";
 import { ChevronLeft, ChevronRight, Plus, MapPin, Edit2, Eye, Trash2 } from "lucide-react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, isSameMonth, isSameDay, parseISO } from "date-fns";
 import { toast } from "sonner";
-import { syncGuestsFromLuma } from "@/lib/api/sync-guests.server";
 
 export const Route = createFileRoute("/_authenticated/events")({
-  ssr: false,
   component: EventsPage,
 });
 
@@ -293,7 +291,13 @@ function EventPreviewModal({
 
       console.log("Syncing Luma event:", lumaEventId);
 
-      const result = await syncGuestsFromLuma(lumaEventId);
+      const response = await fetch(`/api/luma/sync-guests/${lumaEventId}`, {
+        method: "POST",
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result?.error || "Sync failed");
+      }
 
       setSyncResult({ created: result.createdCount, synced: result.syncedCount });
       toast.success(

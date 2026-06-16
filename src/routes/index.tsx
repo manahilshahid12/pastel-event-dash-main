@@ -6,7 +6,6 @@ import { pastel } from "@/lib/pastel";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
-  ssr: false,
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {

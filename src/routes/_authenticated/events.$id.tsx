@@ -14,7 +14,6 @@ import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/events/$id")({
-  ssr: false,
   component: EventDetail,
 });
 
