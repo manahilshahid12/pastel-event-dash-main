@@ -50,7 +50,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </Link>
         <nav className="flex flex-col gap-1">
           {NAV.map((item) => {
-            const active = location.pathname.startsWith(item.to);
+            const active = item.to === "/" ? location.pathname === "/" : location.pathname.startsWith(item.to);
             const Icon = item.icon;
             return (
               <Link key={item.to} to={item.to}

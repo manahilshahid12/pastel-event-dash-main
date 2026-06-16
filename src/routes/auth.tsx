@@ -20,10 +20,15 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmSent, setConfirmSent] = useState(false);
+  const [resending, setResending] = useState(false);
+
+  // Where Supabase should send users after they click the email link.
+  const emailRedirectTo = `${window.location.origin}/`;
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/events" });
+      if (data.user) navigate({ to: "/" });
     });
   }, [navigate]);
 
@@ -32,11 +37,19 @@ function AuthPage() {
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email, password,
-          options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
+          options: { emailRedirectTo, data: { full_name: name } },
         });
         if (error) throw error;
+
+        // When email confirmation is required, Supabase returns a user but
+        // no session. Tell the user to go check their inbox instead of
+        // silently dropping them on a page they can't access yet.
+        if (!data.session) {
+          setConfirmSent(true);
+          return;
+        }
         toast.success("Welcome to the team! 🌸");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -44,17 +57,32 @@ function AuthPage() {
         toast.success("Hi there ✨");
       }
       router.invalidate();
-      navigate({ to: "/events" });
+      navigate({ to: "/" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally { setLoading(false); }
   }
 
+  async function handleResend() {
+    setResending(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email,
+        options: { emailRedirectTo },
+      });
+      if (error) throw error;
+      toast.success("Confirmation email sent again 📬");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't resend email");
+    } finally { setResending(false); }
+  }
+
   async function handleGoogle() {
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: emailRedirectTo });
     if (result.error) { toast.error("Google sign-in failed"); return; }
     if (result.redirected) return;
-    navigate({ to: "/events" });
+    navigate({ to: "/" });
   }
 
   // Landing Page
@@ -162,6 +190,34 @@ function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
+        {confirmSent ? (
+          <div className="paper-card p-8 text-center">
+            <div className="text-5xl mb-3">📬</div>
+            <h1 className="text-2xl font-bold mb-2">Check your email</h1>
+            <p className="text-muted-foreground">
+              We sent a confirmation link to{" "}
+              <span className="font-semibold text-foreground">{email}</span>. Click it to
+              activate your account — you'll be taken straight to your dashboard.
+            </p>
+            <p className="text-sm text-muted-foreground mt-4">
+              Can't find it? Check your spam folder, or resend the link below.
+            </p>
+            <div className="mt-6 flex flex-col gap-2">
+              <Button onClick={handleResend} disabled={resending} className="w-full rounded-full" size="lg">
+                {resending ? "Sending…" : "Resend confirmation email"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => { setConfirmSent(false); setMode("signin"); }}
+                className="w-full rounded-full"
+                size="lg"
+              >
+                Back to sign in
+              </Button>
+            </div>
+          </div>
+        ) : (
+        <>
         <button
           onClick={() => setShowAuth(false)}
           className="mb-4 text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
@@ -208,6 +264,8 @@ function AuthPage() {
             Continue with Google
           </Button>
         </div>
+        </>
+        )}
       </div>
     </div>
   );

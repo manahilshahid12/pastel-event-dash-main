@@ -5,21 +5,10 @@ import { format, parseISO, isFuture, isPast, startOfMonth, endOfMonth } from "da
 import { pastel } from "@/lib/pastel";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
-      throw new Error("Not authenticated");
-    }
-    return { user: data.user };
-  },
+// Lives under the _authenticated layout, so the AppShell (sidebar + sign out)
+// wraps it and the layout's beforeLoad already redirects guests to /auth.
+export const Route = createFileRoute("/_authenticated/")({
   component: DashboardPage,
-  errorComponent: () => (
-    <div className="p-10 text-center">
-      <p className="text-muted-foreground">Please sign in to continue.</p>
-      <Link to="/auth" className="text-primary underline mt-4">Sign in</Link>
-    </div>
-  ),
 });
 
 function DashboardPage() {
